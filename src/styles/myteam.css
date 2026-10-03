@@ -1,0 +1,518 @@
+
+/* =========================================================
+   AI-EMS - MY TEAM
+   Professional Light UI
+   ========================================================= */
+
+.my-team-page {
+  width: 100%;
+  min-height: calc(100vh - 100px);
+  padding: 4px 0 30px;
+  animation: myTeamFadeIn 0.35s ease-out;
+}
+
+/* =========================
+   PAGE HEADER
+   ========================= */
+
+.my-team-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.my-team-title-section {
+  flex: 1;
+}
+
+.my-team-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 7px;
+  color: #6366f1;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.my-team-eyebrow::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #6366f1;
+}
+
+.my-team-header h2 {
+  margin: 0;
+  color: #172033;
+  font-size: 34px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.my-team-header p {
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* =========================
+   TEAM COUNT
+   ========================= */
+
+.my-team-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+  color: #475569;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.my-team-count-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 8px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* =========================
+   TEAM GRID
+   ========================= */
+
+.my-team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* =========================
+   EMPLOYEE CARD
+   ========================= */
+
+.my-team-card {
+  position: relative;
+  overflow: hidden;
+  padding: 22px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.055);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.my-team-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, #4f46e5, #6366f1, #8b5cf6);
+  opacity: 0.9;
+}
+
+.my-team-card:hover {
+  transform: translateY(-4px);
+  border-color: #c7d2fe;
+  box-shadow: 0 12px 28px rgba(79, 70, 229, 0.11);
+}
+
+/* =========================
+   EMPLOYEE CARD HEADER
+   ========================= */
+
+.my-team-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.my-team-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+  color: #4f46e5;
+  font-size: 19px;
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px #c7d2fe;
+}
+
+.my-team-employee-heading {
+  min-width: 0;
+  flex: 1;
+}
+
+.my-team-employee-heading h3 {
+  margin: 0;
+  overflow: hidden;
+  color: #1e293b;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.my-team-designation {
+  display: block;
+  margin-top: 4px;
+  overflow: hidden;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================
+   STATUS
+   ========================= */
+
+.my-team-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 6px 9px;
+  border-radius: 20px;
+  background: #ecfdf5;
+  color: #047857;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.my-team-status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+/* =========================
+   EMPLOYEE DETAILS
+   ========================= */
+
+.my-team-details {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.my-team-detail {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.my-team-detail:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.my-team-detail-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #6366f1;
+  font-size: 14px;
+}
+
+.my-team-detail-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.my-team-detail-label {
+  display: block;
+  margin-bottom: 3px;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.my-team-detail-value {
+  display: block;
+  overflow: hidden;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =========================
+   LOADING
+   ========================= */
+
+.my-team-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  color: #64748b;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.my-team-loading-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.my-team-spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid #e0e7ff;
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: myTeamSpin 0.8s linear infinite;
+}
+
+/* =========================
+   ERROR
+   ========================= */
+
+.my-team-error {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 16px 18px;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.my-team-error-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #fee2e2;
+  font-weight: 700;
+}
+
+.my-team-retry {
+  margin-left: auto;
+  padding: 8px 13px;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #b91c1c;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.my-team-retry:hover {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   EMPTY STATE
+   ========================= */
+
+.my-team-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  padding: 40px 20px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 16px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.my-team-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 17px;
+  border-radius: 16px;
+  background: #eef2ff;
+  color: #6366f1;
+  font-size: 25px;
+}
+
+.my-team-empty h3 {
+  margin: 0;
+  color: #334155;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.my-team-empty p {
+  max-width: 450px;
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* =========================
+   ANIMATIONS
+   ========================= */
+
+@keyframes myTeamFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes myTeamSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================
+   TABLET
+   ========================= */
+
+@media (max-width: 1100px) {
+  .my-team-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 700px) {
+  .my-team-page {
+    padding-top: 0;
+  }
+
+  .my-team-header {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 22px;
+  }
+
+  .my-team-header h2 {
+    font-size: 29px;
+  }
+
+  .my-team-header p {
+    font-size: 14px;
+  }
+
+  .my-team-count {
+    width: fit-content;
+  }
+
+  .my-team-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .my-team-card {
+    padding: 19px;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+   ========================= */
+
+@media (max-width: 450px) {
+  .my-team-header h2 {
+    font-size: 27px;
+  }
+
+  .my-team-card-header {
+    gap: 10px;
+  }
+
+  .my-team-avatar {
+    width: 46px;
+    height: 46px;
+  }
+
+  .my-team-employee-heading h3 {
+    font-size: 16px;
+  }
+
+  .my-team-status {
+    padding: 5px 7px;
+    font-size: 11px;
+  }
+
+  .my-team-detail-value {
+    font-size: 13px;
+  }
+}
+
+/* =========================
+   ACCESSIBILITY
+   ========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .my-team-page,
+  .my-team-card,
+  .my-team-retry,
+  .my-team-spinner {
+    animation: none;
+    transition: none;
+  }
+}

@@ -1,0 +1,29 @@
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080",
+});
+
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+
+    const publicEndpoints = [
+      "/auth/login",
+      "/auth/register",
+      "/auth/forget-password",
+      "/auth/reset-password",
+    ];
+
+    const isPublicEndpoint = publicEndpoints.includes(config.url);
+
+    if (token && !isPublicEndpoint) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+export default api;

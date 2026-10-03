@@ -1,0 +1,673 @@
+/* =========================================================
+   AI-EMS PROFESSIONAL SIDEBAR
+   Modern Enterprise Dashboard
+   ========================================================= */
+
+.ems-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 270px;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  background:
+    linear-gradient(
+      180deg,
+      #111827 0%,
+      #0f172a 55%,
+      #0b1120 100%
+    );
+
+  color: #ffffff;
+
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+
+  box-shadow:
+    8px 0 30px rgba(15, 23, 42, 0.12);
+
+  z-index: 1000;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   SUBTLE BACKGROUND EFFECT
+   ========================================================= */
+
+.ems-sidebar::before {
+  content: "";
+
+  position: absolute;
+  top: -120px;
+  left: -120px;
+
+  width: 300px;
+  height: 300px;
+
+  background: rgba(99, 102, 241, 0.10);
+
+  border-radius: 50%;
+
+  filter: blur(70px);
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.ems-sidebar-brand {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 24px 20px 20px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+
+/* LOGO */
+
+.ems-brand-logo {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6366f1,
+      #4f46e5
+    );
+
+  color: white;
+
+  font-size: 21px;
+  font-weight: 800;
+
+  box-shadow:
+    0 8px 20px rgba(79, 70, 229, 0.35);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.ems-brand-logo:hover {
+  transform: translateY(-2px) rotate(-2deg);
+
+  box-shadow:
+    0 12px 26px rgba(79, 70, 229, 0.45);
+}
+
+
+/* BRAND TEXT */
+
+.ems-brand-text h2 {
+  margin: 0;
+
+  font-size: 20px;
+  font-weight: 800;
+
+  letter-spacing: 0.5px;
+
+  color: #ffffff;
+}
+
+.ems-brand-text span {
+  display: block;
+
+  margin-top: 2px;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+  font-weight: 500;
+
+  letter-spacing: 0.2px;
+}
+
+
+/* =========================================================
+   ROLE CARD
+   ========================================================= */
+
+.ems-role-card {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  margin: 18px 15px 10px;
+
+  padding: 12px;
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.055);
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.ems-role-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  border-color: rgba(99, 102, 241, 0.25);
+}
+
+
+/* ROLE AVATAR */
+
+.ems-role-avatar {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-right: 10px;
+
+  border-radius: 10px;
+
+  background: #eef2ff;
+
+  color: #4f46e5;
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+
+/* ROLE TEXT */
+
+.ems-role-info {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+}
+
+.ems-role-info span {
+  color: #94a3b8;
+
+  font-size: 10px;
+
+  margin-bottom: 2px;
+}
+
+.ems-role-info strong {
+  color: #f8fafc;
+
+  font-size: 12px;
+
+  letter-spacing: 0.6px;
+}
+
+
+/* ONLINE DOT */
+
+.ems-online-dot {
+  width: 8px;
+  height: 8px;
+
+  margin-left: auto;
+
+  border-radius: 50%;
+
+  background: #22c55e;
+
+  box-shadow:
+    0 0 0 3px rgba(34, 197, 94, 0.12);
+
+  animation: ems-online-pulse 2.2s infinite;
+}
+
+@keyframes ems-online-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px rgba(34, 197, 94, 0.10);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 6px rgba(34, 197, 94, 0.02);
+  }
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+.ems-sidebar-nav {
+  position: relative;
+
+  flex: 1;
+
+  padding: 10px 12px;
+
+  overflow-y: auto;
+}
+
+
+/* SCROLLBAR */
+
+.ems-sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ems-sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ems-sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.20);
+
+  border-radius: 10px;
+}
+
+
+/* MENU LABEL */
+
+.ems-menu-label {
+  margin: 8px 10px 10px;
+
+  color: #64748b;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 1.3px;
+}
+
+
+/* =========================================================
+   NAV LINK
+   ========================================================= */
+
+.ems-sidebar-link {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  min-height: 44px;
+
+  margin: 3px 0;
+
+  padding: 0 11px;
+
+  gap: 11px;
+
+  border-radius: 10px;
+
+  color: #cbd5e1;
+
+  text-decoration: none;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  transition:
+    background 0.22s ease,
+    color 0.22s ease,
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+
+/* ICON */
+
+.ems-sidebar-icon {
+  width: 31px;
+  height: 31px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.045);
+
+  font-size: 15px;
+
+  transition:
+    background 0.22s ease,
+    transform 0.22s ease;
+}
+
+
+/* NAME */
+
+.ems-sidebar-name {
+  flex: 1;
+
+  line-height: 1.2;
+}
+
+
+/* ARROW */
+
+.ems-sidebar-arrow {
+  color: #475569;
+
+  font-size: 18px;
+  line-height: 1;
+
+  opacity: 0;
+
+  transform: translateX(-4px);
+
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease,
+    color 0.22s ease;
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.ems-sidebar-link:hover {
+  color: #ffffff;
+
+  background: rgba(255, 255, 255, 0.07);
+
+  transform: translateX(3px);
+}
+
+.ems-sidebar-link:hover .ems-sidebar-icon {
+  background: rgba(99, 102, 241, 0.18);
+
+  transform: scale(1.05);
+}
+
+.ems-sidebar-link:hover .ems-sidebar-arrow {
+  opacity: 1;
+
+  transform: translateX(0);
+
+  color: #a5b4fc;
+}
+
+
+/* =========================================================
+   ACTIVE LINK
+   ========================================================= */
+
+.ems-sidebar-link-active {
+  color: #ffffff !important;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(79, 70, 229, 0.92),
+      rgba(99, 102, 241, 0.72)
+    );
+
+  box-shadow:
+    0 6px 16px rgba(79, 70, 229, 0.20);
+
+  transform: translateX(2px);
+}
+
+
+/* ACTIVE LEFT INDICATOR */
+
+.ems-sidebar-link-active::before {
+  content: "";
+
+  position: absolute;
+
+  left: -12px;
+
+  top: 8px;
+  bottom: 8px;
+
+  width: 3px;
+
+  border-radius: 0 4px 4px 0;
+
+  background: #a5b4fc;
+}
+
+
+/* ACTIVE ICON */
+
+.ems-sidebar-link-active .ems-sidebar-icon {
+  background: rgba(255, 255, 255, 0.16);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+
+/* ACTIVE ARROW */
+
+.ems-sidebar-link-active .ems-sidebar-arrow {
+  opacity: 1;
+
+  transform: translateX(0);
+
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   AI MENU ITEMS
+   ========================================================= */
+
+.ems-ai-link .ems-sidebar-icon {
+  background: rgba(168, 85, 247, 0.09);
+}
+
+.ems-ai-link:hover .ems-sidebar-icon {
+  background: rgba(168, 85, 247, 0.18);
+}
+
+.ems-ai-link.ems-sidebar-link-active {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(124, 58, 237, 0.90),
+      rgba(139, 92, 246, 0.72)
+    );
+
+  box-shadow:
+    0 6px 18px rgba(124, 58, 237, 0.18);
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.ems-sidebar-footer {
+  position: relative;
+
+  padding: 12px 17px 18px;
+}
+
+
+/* LINE */
+
+.ems-footer-line {
+  height: 1px;
+
+  margin-bottom: 13px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.08),
+      transparent
+    );
+}
+
+
+/* STATUS */
+
+.ems-footer-content {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: #94a3b8;
+
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.ems-footer-status {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #22c55e;
+}
+
+
+/* FOOTER SMALL */
+
+.ems-sidebar-footer small {
+  display: block;
+
+  margin-top: 5px;
+  margin-left: 14px;
+
+  color: #475569;
+
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .ems-sidebar {
+    width: 235px;
+  }
+
+  .ems-sidebar-link {
+    font-size: 12px;
+  }
+
+  .ems-brand-text span {
+    display: none;
+  }
+}
+
+
+@media (max-width: 700px) {
+
+  .ems-sidebar {
+    width: 72px;
+  }
+
+  .ems-sidebar-brand {
+    justify-content: center;
+
+    padding: 18px 10px;
+  }
+
+  .ems-brand-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .ems-brand-text,
+  .ems-role-info,
+  .ems-online-dot,
+  .ems-menu-label,
+  .ems-sidebar-name,
+  .ems-sidebar-arrow,
+  .ems-sidebar-footer {
+    display: none;
+  }
+
+  .ems-role-card {
+    justify-content: center;
+
+    margin: 14px 10px;
+    padding: 8px;
+  }
+
+  .ems-role-avatar {
+    margin: 0;
+  }
+
+  .ems-sidebar-nav {
+    padding: 8px;
+  }
+
+  .ems-sidebar-link {
+    justify-content: center;
+
+    padding: 6px;
+
+    min-height: 46px;
+  }
+
+  .ems-sidebar-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ems-sidebar-link:hover {
+    transform: translateX(0) scale(1.04);
+  }
+
+  .ems-sidebar-link-active {
+    transform: translateX(0);
+  }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .ems-sidebar *,
+  .ems-sidebar *::before,
+  .ems-sidebar *::after {
+    animation: none !important;
+
+    transition: none !important;
+  }
+}

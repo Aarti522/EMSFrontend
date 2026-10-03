@@ -1,0 +1,1039 @@
+
+/* =========================================================
+   AI-EMS — Employees Page
+   Professional Light UI
+   Readable Font Sizes
+   ========================================================= */
+
+.employees-page {
+  width: 100%;
+  min-height: calc(100vh - 100px);
+  padding: 4px 0 30px;
+  color: #172033;
+  animation: employees-page-enter 0.35s ease-out;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.employees-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.employees-header h1 {
+  margin: 0 0 7px;
+  color: #111827;
+  font-size: 34px;
+  line-height: 1.2;
+  font-weight: 750;
+  letter-spacing: -0.5px;
+}
+
+.employees-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   ADD EMPLOYEE BUTTON
+   ========================================================= */
+
+.employee-add-btn {
+  min-height: 43px;
+  padding: 10px 18px;
+
+  color: #ffffff;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+
+  border: 1px solid #4f46e5;
+  border-radius: 10px;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.18);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.employee-add-btn:hover {
+  transform: translateY(-2px);
+
+  background: linear-gradient(135deg, #4338ca, #4f46e5);
+
+  box-shadow: 0 9px 22px rgba(79, 70, 229, 0.25);
+}
+
+.employee-add-btn:active {
+  transform: translateY(0);
+}
+
+/* =========================================================
+   ALERTS
+   ========================================================= */
+
+.employee-alert {
+  display: flex;
+  align-items: center;
+
+  min-height: 46px;
+  margin-bottom: 18px;
+  padding: 11px 15px;
+
+  border-radius: 10px;
+
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 550;
+
+  animation: alert-enter 0.25s ease-out;
+}
+
+.employee-alert-error {
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.employee-alert-success {
+  color: #166534;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+/* =========================================================
+   FILTER SECTION
+   ========================================================= */
+
+.employees-filters {
+  display: grid;
+  grid-template-columns: minmax(250px, 1fr) 220px 180px;
+  gap: 12px;
+
+  margin-bottom: 17px;
+  padding: 17px;
+
+  background: #ffffff;
+  border: 1px solid #e5eaf1;
+  border-radius: 14px;
+
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+
+  transition:
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.employees-filters:hover {
+  border-color: #d8defc;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+}
+
+/* =========================================================
+   SEARCH + FILTER
+   ========================================================= */
+
+.employee-search,
+.employee-filter {
+  width: 100%;
+  min-height: 43px;
+
+  padding: 10px 13px;
+
+  color: #1e293b;
+  background: #ffffff;
+
+  border: 1px solid #d8dee8;
+  border-radius: 9px;
+
+  outline: none;
+
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.employee-search::placeholder {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.employee-search:hover,
+.employee-filter:hover {
+  border-color: #b8c3d3;
+  background: #fafbff;
+}
+
+.employee-search:focus,
+.employee-filter:focus {
+  border-color: #6366f1;
+
+  box-shadow:
+    0 0 0 3px rgba(99, 102, 241, 0.11);
+}
+
+.employee-filter {
+  cursor: pointer;
+}
+
+/* =========================================================
+   TABLE CONTAINER
+   ========================================================= */
+
+.employees-table-container {
+  width: 100%;
+  overflow-x: auto;
+
+  background: #ffffff;
+
+  border: 1px solid #e5eaf1;
+  border-radius: 14px;
+
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.055);
+
+  scrollbar-width: thin;
+
+  transition:
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+.employees-table-container:hover {
+  border-color: #dbe1ef;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+}
+
+.employees-table-container::-webkit-scrollbar {
+  height: 7px;
+}
+
+.employees-table-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.employees-table-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.employees-table {
+  width: 100%;
+  min-width: 1100px;
+
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* =========================================================
+   TABLE HEAD
+   ========================================================= */
+
+.employees-table thead {
+  background: #f8fafc;
+}
+
+.employees-table th {
+  padding: 15px 16px;
+
+  color: #475569;
+
+  border-bottom: 1px solid #e2e8f0;
+
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 750;
+
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   TABLE BODY
+   ========================================================= */
+
+.employees-table td {
+  padding: 15px 16px;
+
+  color: #475569;
+
+  border-bottom: 1px solid #eef2f7;
+
+  font-size: 14px;
+  line-height: 1.5;
+
+  vertical-align: middle;
+}
+
+.employees-table tbody tr {
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.employees-table tbody tr:hover {
+  background: #f8faff;
+}
+
+.employees-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =========================================================
+   ID
+   ========================================================= */
+
+.employees-table td:first-child {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+/* =========================================================
+   NAME
+   ========================================================= */
+
+.employees-table td:nth-child(2) {
+  color: #1e293b;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   EMAIL
+   ========================================================= */
+
+.employees-table td:nth-child(3) {
+  color: #475569;
+  font-size: 14px;
+}
+
+/* =========================================================
+   SALARY
+   ========================================================= */
+
+.employees-table td:nth-child(7) {
+  color: #334155;
+  font-size: 14px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   STATUS BADGES
+   ========================================================= */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 82px;
+  padding: 7px 11px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+  line-height: 1.3;
+  font-weight: 750;
+
+  letter-spacing: 0.2px;
+}
+
+.status-active {
+  color: #166534;
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+}
+
+.status-inactive {
+  color: #991b1b;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+}
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.employee-actions {
+  min-width: 180px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* =========================================================
+   EDIT BUTTON
+   ========================================================= */
+
+.employee-edit-btn {
+  min-height: 36px;
+  padding: 7px 12px;
+
+  color: #92400e;
+  background: #fff7ed;
+
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.employee-edit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  color: #78350f;
+  background: #ffedd5;
+  border-color: #fdba74;
+
+  box-shadow: 0 5px 14px rgba(245, 158, 11, 0.13);
+}
+
+/* =========================================================
+   DEACTIVATE BUTTON
+   ========================================================= */
+
+.employee-deactivate-btn {
+  min-height: 36px;
+  padding: 7px 12px;
+
+  color: #b91c1c;
+  background: #fef2f2;
+
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.employee-deactivate-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  color: #991b1b;
+  background: #fee2e2;
+  border-color: #fca5a5;
+
+  box-shadow: 0 5px 14px rgba(239, 68, 68, 0.13);
+}
+
+.employee-edit-btn:disabled,
+.employee-deactivate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   NO EMPLOYEES
+   ========================================================= */
+
+.no-employees {
+  height: 190px;
+
+  color: #64748b !important;
+
+  text-align: center;
+
+  font-size: 15px !important;
+  font-weight: 550;
+}
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.employees-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 250px;
+  padding: 30px;
+
+  color: #64748b;
+
+  background: #ffffff;
+
+  border: 1px solid #e5eaf1;
+  border-radius: 14px;
+
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.045);
+
+  font-size: 15px;
+  font-weight: 550;
+}
+
+/* =========================================================
+   MODAL OVERLAY
+   ========================================================= */
+
+.employee-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 22px;
+
+  background: rgba(15, 23, 42, 0.52);
+
+  backdrop-filter: blur(4px);
+
+  animation: modal-overlay-enter 0.2s ease-out;
+}
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.employee-modal {
+  width: min(720px, 100%);
+  max-height: calc(100vh - 44px);
+
+  overflow-y: auto;
+
+  padding: 25px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+
+  box-shadow:
+    0 24px 60px rgba(15, 23, 42, 0.2),
+    0 8px 25px rgba(15, 23, 42, 0.08);
+
+  animation: modal-enter 0.25s ease-out;
+}
+
+/* =========================================================
+   MODAL HEADER
+   ========================================================= */
+
+.employee-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 18px;
+
+  margin-bottom: 23px;
+  padding-bottom: 17px;
+
+  border-bottom: 1px solid #eef2f7;
+}
+
+.employee-modal-header h2 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 23px;
+  line-height: 1.3;
+  font-weight: 750;
+}
+
+/* =========================================================
+   CLOSE BUTTON
+   ========================================================= */
+
+.employee-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+
+  color: #64748b;
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+
+  font-size: 24px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.employee-modal-close:hover {
+  color: #dc2626;
+  background: #fef2f2;
+  border-color: #fecaca;
+
+  transform: rotate(3deg);
+}
+
+/* =========================================================
+   EMPLOYEE FORM
+   ========================================================= */
+
+.employee-form {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 18px 16px;
+}
+
+.employee-form .form-group {
+  min-width: 0;
+}
+
+.employee-form .form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+/* =========================================================
+   FORM LABELS
+   ========================================================= */
+
+.employee-form .form-group label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #334155;
+
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 650;
+}
+
+/* =========================================================
+   FORM INPUTS
+   ========================================================= */
+
+.employee-form input,
+.employee-form select,
+.employee-form textarea {
+  width: 100%;
+
+  padding: 10px 12px;
+
+  color: #1e293b;
+  background: #ffffff;
+
+  border: 1px solid #d8dee8;
+  border-radius: 9px;
+
+  outline: none;
+
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+
+  box-sizing: border-box;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.employee-form input,
+.employee-form select {
+  min-height: 43px;
+}
+
+.employee-form textarea {
+  min-height: 95px;
+  resize: vertical;
+}
+
+.employee-form input::placeholder,
+.employee-form textarea::placeholder {
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.employee-form input:hover,
+.employee-form select:hover,
+.employee-form textarea:hover {
+  border-color: #b8c3d3;
+  background: #fafbff;
+}
+
+.employee-form input:focus,
+.employee-form select:focus,
+.employee-form textarea:focus {
+  border-color: #6366f1;
+
+  box-shadow:
+    0 0 0 3px rgba(99, 102, 241, 0.11);
+}
+
+/* =========================================================
+   FORM ACTIONS
+   ========================================================= */
+
+.employee-form-actions {
+  grid-column: 1 / -1;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 5px;
+  padding-top: 18px;
+
+  border-top: 1px solid #eef2f7;
+}
+
+/* =========================================================
+   CANCEL BUTTON
+   ========================================================= */
+
+.employee-cancel-btn {
+  min-height: 42px;
+  padding: 9px 17px;
+
+  color: #334155;
+  background: #ffffff;
+
+  border: 1px solid #dbe2ea;
+  border-radius: 9px;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.employee-cancel-btn:hover {
+  transform: translateY(-2px);
+
+  color: #3730a3;
+  background: #f8faff;
+  border-color: #c7d2fe;
+
+  box-shadow: 0 5px 14px rgba(79, 70, 229, 0.08);
+}
+
+/* =========================================================
+   SAVE BUTTON
+   ========================================================= */
+
+.employee-save-btn {
+  min-height: 42px;
+  padding: 9px 18px;
+
+  color: #ffffff;
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+
+  border: 1px solid #4f46e5;
+  border-radius: 9px;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  box-shadow: 0 5px 14px rgba(79, 70, 229, 0.16);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.employee-save-btn:hover {
+  transform: translateY(-2px);
+
+  background: linear-gradient(135deg, #4338ca, #4f46e5);
+
+  box-shadow: 0 8px 18px rgba(79, 70, 229, 0.22);
+}
+
+.employee-save-btn:active,
+.employee-cancel-btn:active {
+  transform: translateY(0);
+}
+
+/* =========================================================
+   FOCUS ACCESSIBILITY
+   ========================================================= */
+
+.employee-add-btn:focus-visible,
+.employee-edit-btn:focus-visible,
+.employee-deactivate-btn:focus-visible,
+.employee-modal-close:focus-visible,
+.employee-cancel-btn:focus-visible,
+.employee-save-btn:focus-visible,
+.employee-search:focus-visible,
+.employee-filter:focus-visible,
+.employee-form input:focus-visible,
+.employee-form select:focus-visible,
+.employee-form textarea:focus-visible {
+  outline: 3px solid rgba(99, 102, 241, 0.18);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes employees-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes alert-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modal-overlay-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+  .employees-header h1 {
+    font-size: 30px;
+  }
+
+  .employees-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .employees-filters .employee-search {
+    grid-column: 1 / -1;
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+  .employees-page {
+    padding-bottom: 20px;
+  }
+
+  .employees-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .employees-header h1 {
+    font-size: 29px;
+  }
+
+  .employees-header p {
+    font-size: 14px;
+  }
+
+  .employee-add-btn {
+    width: 100%;
+  }
+
+  .employees-filters {
+    grid-template-columns: 1fr;
+    gap: 10px;
+
+    padding: 14px;
+  }
+
+  .employees-filters .employee-search {
+    grid-column: auto;
+  }
+
+  .employee-search,
+  .employee-filter {
+    font-size: 14px;
+  }
+
+  .employee-modal-overlay {
+    padding: 12px;
+  }
+
+  .employee-modal {
+    max-height: calc(100vh - 24px);
+    padding: 20px;
+    border-radius: 14px;
+  }
+
+  .employee-modal-header h2 {
+    font-size: 21px;
+  }
+
+  .employee-form {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .employee-form .form-group.full-width {
+    grid-column: auto;
+  }
+
+  .employee-form-actions {
+    grid-column: auto;
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .employee-cancel-btn,
+  .employee-save-btn {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+  .employees-header h1 {
+    font-size: 27px;
+  }
+
+  .employees-header p {
+    font-size: 13px;
+  }
+
+  .employees-table th {
+    padding: 13px 14px;
+    font-size: 12px;
+  }
+
+  .employees-table td {
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .employees-table td:nth-child(2) {
+    font-size: 14px;
+  }
+
+  .employee-modal {
+    padding: 17px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .employees-page,
+  .employee-alert,
+  .employee-modal-overlay,
+  .employee-modal {
+    animation: none;
+  }
+
+  .employee-add-btn,
+  .employee-edit-btn,
+  .employee-deactivate-btn,
+  .employee-modal-close,
+  .employee-cancel-btn,
+  .employee-save-btn,
+  .employee-search,
+  .employee-filter,
+  .employee-form input,
+  .employee-form select,
+  .employee-form textarea {
+    transition: none;
+  }
+}
