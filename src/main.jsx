@@ -16,7 +16,7 @@ import "./styles/myteam.css";
 
 import "./styles/notfound.css";
 
-import "./styles/auth.css";
+import "./styles/Auth.css";
 
 import "./styles/global.css";
 import "./styles/sidebar.css";
