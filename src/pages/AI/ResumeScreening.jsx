@@ -10,9 +10,9 @@ function ResumeScreening() {
 
   // =========================================================
   // ROLE ACCESS
-  // ADMIN    -> ACCESS
-  // HR       -> ACCESS
-  // MANAGER  -> NO ACCESS
+  // ADMIN -> ACCESS
+  // HR -> ACCESS
+  // MANAGER -> NO ACCESS
   // EMPLOYEE -> NO ACCESS
   // =========================================================
 
@@ -24,23 +24,17 @@ function ResumeScreening() {
   // STATES
   // =========================================================
 
-  const [resume, setResume] =
-    useState(null);
+  const [resume, setResume] = useState(null);
 
-  const [jobDescription, setJobDescription] =
-    useState("");
+  const [jobDescription, setJobDescription] = useState("");
 
-  const [jobRole, setJobRole] =
-    useState("");
+  const [jobRole, setJobRole] = useState("");
 
-  const [loading, setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const [result, setResult] =
-    useState(null);
+  const [result, setResult] = useState(null);
 
-  const [error, setError] =
-    useState("");
+  const [error, setError] = useState("");
 
   // =========================================================
   // FILE CHANGE
@@ -125,22 +119,25 @@ function ResumeScreening() {
 
       const formData = new FormData();
 
+      // Resume PDF
       formData.append(
         "resume",
         resume
       );
 
-      /*
-       * Frontend -> Spring Boot
-       *
-       * Spring Boot then converts this to
-       * job_description while calling FastAPI.
-       */
+      // IMPORTANT:
+      // Spring Boot expects:
+      // @RequestParam("job_description")
+      //
+      // Therefore the frontend MUST send
+      // "job_description", not "jobDescription".
+
       formData.append(
-        "jobDescription",
+        "job_description",
         jobDescription.trim()
       );
 
+      // Job role
       formData.append(
         "role",
         jobRole.trim()
@@ -153,7 +150,7 @@ function ResumeScreening() {
           fileSize: resume.size,
           role: jobRole.trim(),
           jobDescription:
-            jobDescription.trim(),
+            jobDescription.trim()
         }
       );
 
@@ -166,8 +163,9 @@ function ResumeScreening() {
       // 2. Adds JWT token
       // 3. Calls deployed Spring Boot backend
       //
-      // Do NOT manually set multipart Content-Type.
-      // Browser/Axios adds the multipart boundary.
+      // Do NOT manually set Content-Type.
+      // Browser/Axios will automatically create the
+      // multipart/form-data boundary.
       // =======================================================
 
       const response = await api.post(
@@ -182,23 +180,6 @@ function ResumeScreening() {
 
       // =======================================================
       // HANDLE RESPONSE
-      // =======================================================
-      //
-      // Spring may return:
-      //
-      // {
-      //   success: true,
-      //   data: {...},
-      //   message: "..."
-      // }
-      //
-      // OR directly:
-      //
-      // {
-      //   matchScore: ...,
-      //   matchedSkills: ...,
-      //   ...
-      // }
       // =======================================================
 
       const resumeResult =
@@ -285,9 +266,7 @@ function ResumeScreening() {
         ) {
           errorMessage =
             err.response.data;
-        }
-
-        else {
+        } else {
           errorMessage =
             err?.response?.data?.message ||
             err?.response?.data?.error ||
@@ -308,9 +287,7 @@ function ResumeScreening() {
         ) {
           errorMessage =
             err.response.data;
-        }
-
-        else {
+        } else {
           errorMessage =
             err?.response?.data?.message ||
             err?.response?.data?.error ||
@@ -504,6 +481,7 @@ function ResumeScreening() {
                 </div>
 
               </div>
+
             )}
 
           </div>
@@ -584,6 +562,7 @@ function ResumeScreening() {
               </span>
 
             </div>
+
           )}
 
           {/* =================================================
@@ -692,9 +671,9 @@ function ResumeScreening() {
               return (
                 <>
 
-                  {/* ===========================================
+                  {/* =========================================
                       ANALYSIS DETAILS
-                  =========================================== */}
+                  ========================================= */}
 
                   <div className="analysis-section">
 
@@ -756,6 +735,7 @@ function ResumeScreening() {
                                 >
                                   ✓ {skill}
                                 </span>
+
                               )
                             )
 
@@ -764,6 +744,7 @@ function ResumeScreening() {
                             <span className="skill-tag">
                               No matched skills
                             </span>
+
                           )}
 
                         </div>
@@ -794,6 +775,7 @@ function ResumeScreening() {
                                 >
                                   ✕ {skill}
                                 </span>
+
                               )
                             )
 
@@ -802,6 +784,7 @@ function ResumeScreening() {
                             <span className="skill-tag matched">
                               ✓ No missing skills
                             </span>
+
                           )}
 
                         </div>
@@ -828,11 +811,13 @@ function ResumeScreening() {
 
                 </>
               );
+
             })()}
 
           </div>
 
         </div>
+
       )}
 
     </div>
