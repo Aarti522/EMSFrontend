@@ -6,25 +6,13 @@ import "../../styles/hrchatbot.css";
 function HRChatbot() {
   const { role: authRole } = useAuth();
 
-  // =========================================================
-  // USER INFORMATION
-  // =========================================================
-
   const [role, setRole] = useState("");
   const [employeeId, setEmployeeId] = useState(null);
   const [employeeName, setEmployeeName] = useState("");
-
   const [departmentId, setDepartmentId] = useState(null);
   const [departmentName, setDepartmentName] = useState("");
-
-  // Manager's team
   const [teamEmployeeIds, setTeamEmployeeIds] = useState([]);
-
   const [profileLoading, setProfileLoading] = useState(true);
-
-  // =========================================================
-  // CHAT STATES
-  // =========================================================
 
   const [message, setMessage] = useState("");
 
@@ -36,6 +24,24 @@ function HRChatbot() {
   ]);
 
   const [loading, setLoading] = useState(false);
+
+  // =========================================================
+  // NORMALIZE ROLE
+  // ROLE_HR -> HR
+  // ROLE_ADMIN -> ADMIN
+  // =========================================================
+
+  const normalizeRole = (value) => {
+    if (!value) {
+      return "";
+    }
+
+    return value
+      .toString()
+      .trim()
+      .toUpperCase()
+      .replace(/^ROLE_/, "");
+  };
 
   // =========================================================
   // GET EMPLOYEE ID
@@ -90,48 +96,44 @@ function HRChatbot() {
           return;
         }
 
-        // -----------------------------------------------------
-        // Get role from AuthContext first
-        // -----------------------------------------------------
-
-        let currentRole = authRole?.toUpperCase() || "";
-
-        // -----------------------------------------------------
-        // Fallback: localStorage role
-        // -----------------------------------------------------
+        let currentRole =
+          normalizeRole(authRole);
 
         if (!currentRole) {
-          const storedRole = localStorage.getItem("role");
+          const storedRole =
+            localStorage.getItem("role");
 
-          if (storedRole) {
-            currentRole = storedRole.toUpperCase();
-          }
+          currentRole =
+            normalizeRole(storedRole);
         }
 
-        // -----------------------------------------------------
-        // Load profile
-        // -----------------------------------------------------
+        const response =
+          await api.get("/profile");
 
-        const response = await api.get("/profile");
+        console.log(
+          "Chatbot Profile Response:",
+          response.data
+        );
 
-        console.log("Chatbot Profile:", response.data);
+        const profile =
+          response.data?.data ??
+          response.data ??
+          {};
 
-        const profile = response.data || {};
-
-        // -----------------------------------------------------
-        // Employee ID
-        // -----------------------------------------------------
+        const profileEmployeeId =
+          profile.employeeId ??
+          profile.employee_id ??
+          profile.id ??
+          null;
 
         if (
-          profile.employeeId !== null &&
-          profile.employeeId !== undefined
+          profileEmployeeId !== null &&
+          profileEmployeeId !== undefined
         ) {
-          setEmployeeId(Number(profile.employeeId));
+          setEmployeeId(
+            Number(profileEmployeeId)
+          );
         }
-
-        // -----------------------------------------------------
-        // Employee Name
-        // -----------------------------------------------------
 
         const name =
           profile.employeeName ??
@@ -143,18 +145,19 @@ function HRChatbot() {
           setEmployeeName(name);
         }
 
-        // -----------------------------------------------------
-        // Department
-        // -----------------------------------------------------
-
         const profileDepartmentId =
           profile.departmentId ??
           profile.department_id ??
           profile.department?.id ??
           null;
 
-        if (profileDepartmentId !== null) {
-          setDepartmentId(Number(profileDepartmentId));
+        if (
+          profileDepartmentId !== null &&
+          profileDepartmentId !== undefined
+        ) {
+          setDepartmentId(
+            Number(profileDepartmentId)
+          );
         }
 
         const profileDepartmentName =
@@ -164,25 +167,36 @@ function HRChatbot() {
           "";
 
         if (profileDepartmentName) {
-          setDepartmentName(profileDepartmentName);
+          setDepartmentName(
+            profileDepartmentName
+          );
         }
-
-        // -----------------------------------------------------
-        // Profile role has priority
-        // -----------------------------------------------------
 
         if (profile.role) {
-          currentRole = profile.role.toUpperCase();
+          currentRole =
+            normalizeRole(profile.role);
         }
+
+        console.log(
+          "Normalized Chatbot Role:",
+          currentRole
+        );
 
         setRole(currentRole);
-      } catch (err) {
-        console.error("Profile loading error:", err);
 
-        // Fallback to AuthContext role
-        if (authRole) {
-          setRole(authRole.toUpperCase());
+      } catch (err) {
+        console.error(
+          "Chatbot profile loading error:",
+          err
+        );
+
+        const fallbackRole =
+          normalizeRole(authRole);
+
+        if (fallbackRole) {
+          setRole(fallbackRole);
         }
+
       } finally {
         setProfileLoading(false);
       }
@@ -198,72 +212,81 @@ function HRChatbot() {
   useEffect(() => {
     const loadManagerTeam = async () => {
       if (role !== "MANAGER") {
+        setTeamEmployeeIds([]);
         return;
       }
 
-      if (departmentId === null && !departmentName) {
+      if (
+        departmentId === null &&
+        !departmentName
+      ) {
         return;
       }
 
       try {
-        const response = await api.get("/employees");
+        const response =
+          await api.get("/employees");
 
-        console.log("Chatbot Manager Team:", response.data);
+        const responseData =
+          response.data?.data ??
+          response.data;
 
-        const employees = Array.isArray(response.data)
-          ? response.data
-          : response.data?.employees || [];
+        const employees =
+          Array.isArray(responseData)
+            ? responseData
+            : responseData?.employees || [];
 
-        const teamEmployees = employees.filter((employee) => {
-          const empDepartmentId = getDepartmentId(employee);
-          const empDepartmentName = getDepartmentName(employee);
+        const teamEmployees =
+          employees.filter((employee) => {
+            const empDepartmentId =
+              getDepartmentId(employee);
 
-          // -----------------------------------------------
-          // Department ID match
-          // -----------------------------------------------
+            const empDepartmentName =
+              getDepartmentName(employee);
 
-          if (
-            departmentId !== null &&
-            empDepartmentId !== null
-          ) {
-            return (
-              Number(empDepartmentId) ===
-              Number(departmentId)
-            );
-          }
+            if (
+              departmentId !== null &&
+              empDepartmentId !== null
+            ) {
+              return (
+                Number(empDepartmentId) ===
+                Number(departmentId)
+              );
+            }
 
-          // -----------------------------------------------
-          // Department name fallback
-          // -----------------------------------------------
-
-          if (
-            departmentName &&
-            empDepartmentName
-          ) {
-            return (
+            if (
+              departmentName &&
               empDepartmentName
-                .toString()
-                .toLowerCase() ===
-              departmentName
-                .toString()
-                .toLowerCase()
-            );
-          }
+            ) {
+              return (
+                empDepartmentName
+                  .toString()
+                  .trim()
+                  .toLowerCase() ===
+                departmentName
+                  .toString()
+                  .trim()
+                  .toLowerCase()
+              );
+            }
 
-          return false;
-        });
+            return false;
+          });
 
-        const teamIds = teamEmployees
-          .map((employee) => getEmployeeId(employee))
-          .filter((id) => id !== null)
-          .map((id) => Number(id));
-
-        console.log(
-          "Manager Team Employee IDs:",
-          teamIds
-        );
+        const teamIds =
+          teamEmployees
+            .map((employee) =>
+              getEmployeeId(employee)
+            )
+            .filter(
+              (id) =>
+                id !== null &&
+                id !== undefined
+            )
+            .map((id) => Number(id));
 
         setTeamEmployeeIds(teamIds);
+
       } catch (err) {
         console.error(
           "Manager team loading error:",
@@ -275,31 +298,26 @@ function HRChatbot() {
     };
 
     loadManagerTeam();
-  }, [role, departmentId, departmentName]);
+  }, [
+    role,
+    departmentId,
+    departmentName,
+  ]);
 
   // =========================================================
-  // GET CHATBOT ACCESS SCOPE
+  // ACCESS SCOPE
   // =========================================================
 
   const getAccessScope = () => {
-    // ADMIN
-    if (role === "ADMIN") {
+    if (
+      role === "ADMIN" ||
+      role === "HR"
+    ) {
       return "ORGANIZATION";
     }
 
-    // HR
-    if (role === "HR") {
-      return "ORGANIZATION";
-    }
-
-    // MANAGER
     if (role === "MANAGER") {
       return "TEAM";
-    }
-
-    // EMPLOYEE
-    if (role === "EMPLOYEE") {
-      return "OWN_GENERAL";
     }
 
     return "OWN_GENERAL";
@@ -310,21 +328,20 @@ function HRChatbot() {
   // =========================================================
 
   const sendMessage = async (e) => {
-    e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
 
     if (!message.trim()) {
       return;
     }
 
-    if (profileLoading) {
+    if (profileLoading || loading) {
       return;
     }
 
-    const userMessage = message.trim();
-
-    // -------------------------------------------------------
-    // Add user message immediately
-    // -------------------------------------------------------
+    const userMessage =
+      message.trim();
 
     setMessages((prev) => [
       ...prev,
@@ -338,71 +355,82 @@ function HRChatbot() {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem("token");
+      const normalizedRole =
+        normalizeRole(role) ||
+        normalizeRole(authRole) ||
+        "EMPLOYEE";
 
-      // -----------------------------------------------------
-      // Determine access scope
-      // -----------------------------------------------------
+      let accessScope =
+        "OWN_GENERAL";
 
-      const accessScope = getAccessScope();
-
-      // -----------------------------------------------------
-      // Build chatbot context
-      // -----------------------------------------------------
+      if (
+        normalizedRole === "ADMIN" ||
+        normalizedRole === "HR"
+      ) {
+        accessScope =
+          "ORGANIZATION";
+      } else if (
+        normalizedRole === "MANAGER"
+      ) {
+        accessScope =
+          "TEAM";
+      }
 
       const requestData = {
         message: userMessage,
 
-        role: role || "EMPLOYEE",
+        role: normalizedRole,
 
-        employeeId: employeeId || 0,
+        employeeId:
+          employeeId ?? 0,
 
         context: {
-          // Current user's access scope
-          accessScope: accessScope,
+          accessScope,
 
-          // Logged-in employee
-          employeeId: employeeId || 0,
+          employeeId:
+            employeeId ?? 0,
 
-          employeeName: employeeName || "",
+          employeeName:
+            employeeName || "",
 
-          // Department information
-          departmentId: departmentId || 0,
+          departmentId:
+            departmentId ?? 0,
 
-          departmentName: departmentName || "",
+          departmentName:
+            departmentName || "",
 
-          // Manager team
           teamEmployeeIds:
-            role === "MANAGER"
+            normalizedRole === "MANAGER"
               ? teamEmployeeIds
               : [],
 
-          // -------------------------------------------------
-          // Permission flags
-          // -------------------------------------------------
-
           permissions: {
             organizationAccess:
-              role === "ADMIN" ||
-              role === "HR",
+              normalizedRole === "ADMIN" ||
+              normalizedRole === "HR",
 
             teamAccess:
-              role === "MANAGER",
+              normalizedRole === "MANAGER",
 
             ownAccess:
-              role === "EMPLOYEE" ||
-              role === "MANAGER",
+              normalizedRole === "EMPLOYEE" ||
+              normalizedRole === "MANAGER",
 
             generalHRAccess: true,
           },
 
-          // Keep this field if Python chatbot expects it
           additionalProp: {},
         },
       };
 
       console.log(
-        "========================================"
+        "Normalized Chatbot Role:",
+        normalizedRole
+      );
+
+      console.log(
+        "Chatbot Access Scope:",
+        accessScope
       );
 
       console.log(
@@ -410,111 +438,83 @@ function HRChatbot() {
         requestData
       );
 
-      console.log(
-        "Chatbot API: POST /ai/chatbot"
-      );
-
-      console.log(
-        "========================================"
-      );
-
-      // =====================================================
-      // API REQUEST
-      // =====================================================
-
-      const response = await api.post(
-        "/ai/chatbot",
-        requestData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      console.log(
-        "========================================"
-      );
+      const response =
+        await api.post(
+          "/ai/chatbot",
+          requestData
+        );
 
       console.log(
         "Chatbot Response:",
         response.data
       );
 
-      console.log(
-        "Actual AI Response:",
-        response.data?.data?.response
-      );
-
-      console.log(
-        "========================================"
-      );
-
-      // =====================================================
-      // BOT RESPONSE
-      // =====================================================
-
-      /*
-       * Python response structure:
-       *
-       * {
-       *   "success": true,
-       *   "data": {
-       *     "employeeId": 101,
-       *     "response": "Hello. How can I assist you..."
-       *   },
-       *   "message": "Chatbot response generated successfully"
-       * }
-       */
+      const responseData =
+        response.data?.data ??
+        response.data;
 
       const botReply =
-        response.data?.data?.response ||
-        response.data?.reply ||
-        response.data?.response ||
-        response.data?.answer ||
-        response.data?.text ||
-        response.data?.message ||
+        responseData?.response ??
+        responseData?.reply ??
+        responseData?.answer ??
+        responseData?.text ??
+        responseData?.message ??
+        response.data?.message ??
         "Sorry, I could not understand your question.";
 
       setMessages((prev) => [
         ...prev,
         {
           sender: "bot",
-          text: botReply,
+          text:
+            typeof botReply === "string"
+              ? botReply
+              : JSON.stringify(botReply),
         },
       ]);
-    } catch (err) {
-      console.error(
-        "========================================"
-      );
 
+    } catch (err) {
       console.error(
         "Chatbot error:",
         err
       );
 
       console.error(
-        "Status:",
+        "Chatbot Status:",
         err?.response?.status
       );
 
       console.error(
-        "Error Response:",
+        "Chatbot Error Response:",
         err?.response?.data
-      );
-
-      console.error(
-        "========================================"
       );
 
       let errorMessage =
         "Sorry, something went wrong. Please try again.";
 
-      if (err?.response?.data?.message) {
+      if (err?.response?.status === 401) {
+        errorMessage =
+          "Your session has expired. Please login again.";
+      } else if (
+        err?.response?.status === 403
+      ) {
+        errorMessage =
+          "You do not have permission to use the AI HR Chatbot.";
+      } else if (
+        err?.response?.status === 500
+      ) {
+        errorMessage =
+          err?.response?.data?.message ||
+          err?.response?.data?.error ||
+          "AI Chatbot server error. Please try again.";
+      } else if (
+        err?.response?.data?.message
+      ) {
         errorMessage =
           err.response.data.message;
-      } else if (err?.response?.data?.error) {
+      } else if (
+        err?.response?.data?.error
+      ) {
         errorMessage =
           err.response.data.error;
       } else if (
@@ -528,14 +528,14 @@ function HRChatbot() {
         ...prev,
         {
           sender: "bot",
-          text: errorMessage,
+          text: String(errorMessage),
         },
       ]);
+
     } finally {
       setLoading(false);
     }
   };
-
   // =========================================================
   // ENTER KEY
   // =========================================================
@@ -546,7 +546,14 @@ function HRChatbot() {
       !e.shiftKey
     ) {
       e.preventDefault();
-      sendMessage(e);
+
+      if (
+        message.trim() &&
+        !loading &&
+        !profileLoading
+      ) {
+        sendMessage(e);
+      }
     }
   };
 
@@ -563,11 +570,10 @@ function HRChatbot() {
   // =========================================================
 
   const getAccessDescription = () => {
-    if (role === "ADMIN") {
-      return "Organization-wide HR assistance";
-    }
-
-    if (role === "HR") {
+    if (
+      role === "ADMIN" ||
+      role === "HR"
+    ) {
       return "Organization-wide HR assistance";
     }
 
@@ -589,9 +595,7 @@ function HRChatbot() {
   return (
     <div className="chatbot-page">
 
-      {/* =====================================================
-          HEADER
-      ===================================================== */}
+      {/* ================= HEADER ================= */}
 
       <div className="chatbot-header">
 
@@ -612,15 +616,11 @@ function HRChatbot() {
 
       </div>
 
-      {/* =====================================================
-          CHAT CONTAINER
-      ===================================================== */}
+      {/* ================= CHAT CONTAINER ================= */}
 
       <div className="chatbot-container">
 
-        {/* ===================================================
-            CHAT HEADER
-        =================================================== */}
+        {/* CHAT HEADER */}
 
         <div className="chat-header">
 
@@ -642,23 +642,25 @@ function HRChatbot() {
 
         </div>
 
-        {/* ===================================================
-            USER INFORMATION
-        =================================================== */}
+        {/* USER INFORMATION */}
 
         <div className="chat-user-info">
 
           <span>
             👤 Role:{" "}
             <strong>
-              {role || "Loading..."}
+              {profileLoading
+                ? "Loading..."
+                : role || "UNKNOWN"}
             </strong>
           </span>
 
           <span>
             🆔 Employee ID:{" "}
             <strong>
-              {employeeId || "Loading..."}
+              {profileLoading
+                ? "Loading..."
+                : employeeId ?? "N/A"}
             </strong>
           </span>
 
@@ -671,9 +673,7 @@ function HRChatbot() {
 
         </div>
 
-        {/* ===================================================
-            MESSAGES
-        =================================================== */}
+        {/* ================= MESSAGES ================= */}
 
         <div className="chat-messages">
 
@@ -689,15 +689,11 @@ function HRChatbot() {
                 }`}
               >
 
-                {/* BOT AVATAR */}
-
                 {msg.sender === "bot" && (
                   <div className="small-avatar">
                     🤖
                   </div>
                 )}
-
-                {/* MESSAGE */}
 
                 <div
                   className={`message ${
@@ -710,13 +706,10 @@ function HRChatbot() {
                 </div>
 
               </div>
-
             )
           )}
 
-          {/* =================================================
-              LOADING
-          ================================================= */}
+          {/* LOADING */}
 
           {loading && (
 
@@ -727,22 +720,17 @@ function HRChatbot() {
               </div>
 
               <div className="bot-message typing">
-
                 <span></span>
                 <span></span>
                 <span></span>
-
               </div>
 
             </div>
-
           )}
 
         </div>
 
-        {/* ===================================================
-            INPUT
-        =================================================== */}
+        {/* ================= INPUT ================= */}
 
         <form
           className="chat-input-area"
@@ -782,9 +770,7 @@ function HRChatbot() {
 
       </div>
 
-      {/* =====================================================
-          QUICK QUESTIONS
-      ===================================================== */}
+      {/* ================= QUICK QUESTIONS ================= */}
 
       <div className="quick-questions">
 
@@ -825,17 +811,6 @@ function HRChatbot() {
             }
           >
             How can I check my salary?
-          </button>
-
-          <button
-            type="button"
-            onClick={() =>
-              askQuickQuestion(
-                "What is my current leave balance?"
-              )
-            }
-          >
-            What is my leave balance?
           </button>
 
         </div>

@@ -6,8 +6,32 @@ import "../../styles/ai-attendance.css";
 function AttendanceInsights() {
   const { role } = useAuth();
 
-  const userRole = role?.toUpperCase();
+  // =========================================================
+  // NORMALIZE ROLE
+  // ROLE_ADMIN -> ADMIN
+  // ROLE_HR -> HR
+  // ROLE_MANAGER -> MANAGER
+  // ROLE_EMPLOYEE -> EMPLOYEE
+  // =========================================================
 
+  const normalizeRole = (value) => {
+    if (!value) {
+      return "";
+    }
+
+    return value
+      .toString()
+      .trim()
+      .toUpperCase()
+      .replace(/^ROLE_/, "");
+  };
+
+  const userRole = normalizeRole(role);
+
+  console.log(
+    "Attendance AI Normalized Role:",
+    userRole
+  );
   // =========================================================
   // FORM STATES
   // =========================================================
