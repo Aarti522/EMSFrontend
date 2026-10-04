@@ -11,6 +11,7 @@ function Register() {
     name: "",
     email: "",
     phone: "",
+    address: "",
     password: "",
     confirmPassword: "",
     department: "",
@@ -49,7 +50,7 @@ function Register() {
 
       console.log("Register Response:", data);
 
-      setSuccess(data.message || "Registration successful!");
+      setSuccess(data?.message || "Registration successful!");
 
       setTimeout(() => {
         navigate("/login");
@@ -57,10 +58,16 @@ function Register() {
     } catch (error) {
       console.error("Register Error:", error);
 
-      setError(
-        error.response?.data?.message ||
-          "Registration failed. Please try again."
-      );
+      const responseData = error.response?.data;
+
+      if (typeof responseData === "string") {
+        setError(responseData);
+      } else {
+        setError(
+          responseData?.message ||
+            "Registration failed. Please try again."
+        );
+      }
     } finally {
       setLoading(false);
     }
@@ -126,9 +133,7 @@ function Register() {
 
               <h2>Create Account</h2>
 
-              <p>
-                Register to access the AI-EMS platform
-              </p>
+              <p>Register to access the AI-EMS platform</p>
             </div>
 
             {error && (
@@ -146,14 +151,11 @@ function Register() {
             )}
 
             <form onSubmit={handleRegister}>
-
               <div className="auth-form-grid">
 
                 {/* USERNAME */}
                 <div className="auth-input-group">
-                  <label htmlFor="username">
-                    Username
-                  </label>
+                  <label htmlFor="username">Username</label>
 
                   <div className="auth-input-wrapper has-icon">
                     <span className="auth-input-icon">👤</span>
@@ -172,9 +174,7 @@ function Register() {
 
                 {/* NAME */}
                 <div className="auth-input-group">
-                  <label htmlFor="name">
-                    Full Name
-                  </label>
+                  <label htmlFor="name">Full Name</label>
 
                   <div className="auth-input-wrapper has-icon">
                     <span className="auth-input-icon">🧑</span>
@@ -193,9 +193,7 @@ function Register() {
 
                 {/* EMAIL */}
                 <div className="auth-input-group">
-                  <label htmlFor="email">
-                    Email Address
-                  </label>
+                  <label htmlFor="email">Email Address</label>
 
                   <div className="auth-input-wrapper has-icon">
                     <span className="auth-input-icon">✉</span>
@@ -214,9 +212,7 @@ function Register() {
 
                 {/* PHONE */}
                 <div className="auth-input-group">
-                  <label htmlFor="phone">
-                    Phone Number
-                  </label>
+                  <label htmlFor="phone">Phone Number</label>
 
                   <div className="auth-input-wrapper has-icon">
                     <span className="auth-input-icon">📱</span>
@@ -233,11 +229,28 @@ function Register() {
                   </div>
                 </div>
 
+                {/* ADDRESS */}
+                <div className="auth-input-group auth-full">
+                  <label htmlFor="address">Address</label>
+
+                  <div className="auth-input-wrapper has-icon">
+                    <span className="auth-input-icon">📍</span>
+
+                    <input
+                      id="address"
+                      type="text"
+                      name="address"
+                      placeholder="Enter address, e.g. Pune, Maharashtra"
+                      value={formData.address}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
+
                 {/* PASSWORD */}
                 <div className="auth-input-group">
-                  <label htmlFor="password">
-                    Password
-                  </label>
+                  <label htmlFor="password">Password</label>
 
                   <div className="auth-input-wrapper has-icon">
                     <span className="auth-input-icon">🔒</span>
@@ -277,9 +290,7 @@ function Register() {
 
                 {/* DEPARTMENT */}
                 <div className="auth-input-group auth-full">
-                  <label htmlFor="department">
-                    Department
-                  </label>
+                  <label htmlFor="department">Department</label>
 
                   <div className="auth-input-wrapper">
                     <select
@@ -293,23 +304,32 @@ function Register() {
                         Select Department
                       </option>
 
-                      <option value="IT">IT</option>
-                      <option value="HR">HR</option>
-                      <option value="Finance">Finance</option>
-                      <option value="Marketing">Marketing</option>
-                      <option value="Sales">Sales</option>
-                      <option value="Software Development">
-                        Software Development
+                      <option value="Information Technology">
+                        Information Technology
                       </option>
-                      <option value="Quality Assurance">
-                        Quality Assurance
+
+                      <option value="Human Resources">
+                        Human Resources
                       </option>
-                      <option value="DevOps">DevOps</option>
-                      <option value="Business Analyst">
-                        Business Analyst
+
+                      <option value="Finance">
+                        Finance
                       </option>
-                      <option value="Administration">
-                        Administration
+
+                      <option value="Marketing">
+                        Marketing
+                      </option>
+
+                      <option value="Operations">
+                        Operations
+                      </option>
+
+                      <option value="Sales">
+                        Sales
+                      </option>
+
+                      <option value="Research and Development">
+                        Research and Development
                       </option>
                     </select>
                   </div>
@@ -317,7 +337,6 @@ function Register() {
 
               </div>
 
-              {/* BUTTON */}
               <button
                 type="submit"
                 className="auth-submit-button"
@@ -346,7 +365,6 @@ function Register() {
 
           </div>
         </div>
-
       </div>
     </div>
   );
