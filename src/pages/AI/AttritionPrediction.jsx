@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import "../../styles/ai-attrition.css";
 
 function AttritionPrediction() {
@@ -18,11 +18,10 @@ function AttritionPrediction() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const getToken = () => {
-    return localStorage.getItem("token");
-  };
+  // =========================================================
+  // SAFE TEXT
+  // =========================================================
 
-  // Safely convert API values into something React can render
   const safeText = (value) => {
     if (value === null || value === undefined) {
       return "N/A";
@@ -45,6 +44,10 @@ function AttritionPrediction() {
     return String(value);
   };
 
+  // =========================================================
+  // PREDICT ATTRITION
+  // =========================================================
+
   const handlePredict = async (e) => {
     e.preventDefault();
 
@@ -56,48 +59,121 @@ function AttritionPrediction() {
       return;
     }
 
+    const requestBody = {
+      employeeId: Number(employeeId),
+      age: Number(age),
+      experienceYears: Number(experienceYears),
+      monthlyIncome: Number(monthlyIncome),
+      jobSatisfaction: Number(jobSatisfaction),
+      workLifeBalance: Number(workLifeBalance),
+      overtimeHours: Number(overtimeHours),
+      yearsAtCompany: Number(yearsAtCompany),
+      promotionYearsAgo: Number(promotionYearsAgo),
+      leaveDays: Number(leaveDays),
+    };
+
+    console.log(
+      "Attrition AI Request:",
+      requestBody
+    );
+
     try {
       setLoading(true);
 
-      const token = getToken();
-
-      const response = await axios.post(
-        "http://localhost:8080/ai/attrition",
-        {
-          employeeId: Number(employeeId),
-          age: Number(age),
-          experienceYears: Number(experienceYears),
-          monthlyIncome: Number(monthlyIncome),
-          jobSatisfaction: Number(jobSatisfaction),
-          workLifeBalance: Number(workLifeBalance),
-          overtimeHours: Number(overtimeHours),
-          yearsAtCompany: Number(yearsAtCompany),
-          promotionYearsAgo: Number(promotionYearsAgo),
-          leaveDays: Number(leaveDays),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
+      const response = await api.post(
+        "/ai/attrition",
+        requestBody
       );
 
-      console.log("Attrition AI Response:", response.data);
+      console.log(
+        "Attrition AI Response:",
+        response.data
+      );
 
-      setResult(response.data);
-    } catch (err) {
-      console.error("Attrition prediction error:", err);
+      const attritionResult =
+        response.data?.data ??
+        response.data;
 
-      let errorMessage = "Unable to generate attrition prediction.";
-
-      if (err?.response?.data?.message) {
-        errorMessage = safeText(err.response.data.message);
-      } else if (err?.response?.data) {
-        errorMessage = safeText(err.response.data);
+      if (
+        attritionResult === null ||
+        attritionResult === undefined
+      ) {
+        setError(
+          "Attrition AI returned an empty response."
+        );
+        return;
       }
 
-      setError(errorMessage);
+      setResult(attritionResult);
+
+    } catch (err) {
+      console.error(
+        "Attrition prediction error:",
+        err
+      );
+
+      console.error(
+        "Attrition error response:",
+        err?.response?.data
+      );
+
+      if (err?.response?.status === 401) {
+        setError(
+          "Session expired. Please login again."
+        );
+      }
+
+      else if (err?.response?.status === 403) {
+        setError(
+          "You are not authorized to access attrition prediction."
+        );
+      }
+
+      else if (err?.response?.status === 404) {
+        setError(
+          "Attrition AI endpoint not found."
+        );
+      }
+
+      else if (err?.response?.status === 500) {
+        setError(
+          err?.response?.data?.message ||
+          err?.response?.data?.error ||
+          "Attrition AI server error. Please check Spring Boot and Python AI service."
+        );
+      }
+
+      else {
+        let errorMessage =
+          "Unable to generate attrition prediction.";
+
+        if (
+          err?.response?.data?.message
+        ) {
+          errorMessage = safeText(
+            err.response.data.message
+          );
+        }
+
+        else if (
+          err?.response?.data?.error
+        ) {
+          errorMessage = safeText(
+            err.response.data.error
+          );
+        }
+
+        else if (
+          err?.response?.data
+        ) {
+          errorMessage = safeText(
+            err.response.data
+          );
+        }
+
+        setError(errorMessage);
+      }
+
     } finally {
       setLoading(false);
     }
@@ -107,10 +183,13 @@ function AttritionPrediction() {
     <div className="attrition-page">
 
       {/* ================= HEADER ================= */}
+
       <div className="attrition-header">
 
         <div>
-          <h1>AI Attrition Prediction</h1>
+          <h1>
+            AI Attrition Prediction
+          </h1>
 
           <p>
             Analyze employee information and identify
@@ -125,9 +204,11 @@ function AttritionPrediction() {
       </div>
 
       {/* ================= MAIN LAYOUT ================= */}
+
       <div className="attrition-layout">
 
         {/* ================= FORM CARD ================= */}
+
         <div className="attrition-card">
 
           <div className="card-heading">
@@ -137,7 +218,9 @@ function AttritionPrediction() {
             </div>
 
             <div>
-              <h2>Employee Risk Analysis</h2>
+              <h2>
+                Employee Risk Analysis
+              </h2>
 
               <p>
                 Enter employee details to predict
@@ -150,15 +233,20 @@ function AttritionPrediction() {
           <form onSubmit={handlePredict}>
 
             {/* EMPLOYEE ID */}
+
             <div className="form-group">
 
-              <label>Employee ID</label>
+              <label>
+                Employee ID
+              </label>
 
               <input
                 type="number"
                 value={employeeId}
                 onChange={(e) =>
-                  setEmployeeId(e.target.value)
+                  setEmployeeId(
+                    e.target.value
+                  )
                 }
                 placeholder="Enter Employee ID"
                 min="1"
@@ -168,15 +256,20 @@ function AttritionPrediction() {
             </div>
 
             {/* AGE */}
+
             <div className="form-group">
 
-              <label>Age</label>
+              <label>
+                Age
+              </label>
 
               <input
                 type="number"
                 value={age}
                 onChange={(e) =>
-                  setAge(e.target.value)
+                  setAge(
+                    e.target.value
+                  )
                 }
                 placeholder="Example: 25"
                 min="18"
@@ -187,15 +280,20 @@ function AttritionPrediction() {
             </div>
 
             {/* EXPERIENCE YEARS */}
+
             <div className="form-group">
 
-              <label>Experience (Years)</label>
+              <label>
+                Experience (Years)
+              </label>
 
               <input
                 type="number"
                 value={experienceYears}
                 onChange={(e) =>
-                  setExperienceYears(e.target.value)
+                  setExperienceYears(
+                    e.target.value
+                  )
                 }
                 placeholder="Example: 2"
                 min="0"
@@ -206,15 +304,20 @@ function AttritionPrediction() {
             </div>
 
             {/* MONTHLY INCOME */}
+
             <div className="form-group">
 
-              <label>Monthly Income</label>
+              <label>
+                Monthly Income
+              </label>
 
               <input
                 type="number"
                 value={monthlyIncome}
                 onChange={(e) =>
-                  setMonthlyIncome(e.target.value)
+                  setMonthlyIncome(
+                    e.target.value
+                  )
                 }
                 placeholder="Example: 25000"
                 min="0"
@@ -224,14 +327,19 @@ function AttritionPrediction() {
             </div>
 
             {/* JOB SATISFACTION */}
+
             <div className="form-group">
 
-              <label>Job Satisfaction</label>
+              <label>
+                Job Satisfaction
+              </label>
 
               <select
                 value={jobSatisfaction}
                 onChange={(e) =>
-                  setJobSatisfaction(e.target.value)
+                  setJobSatisfaction(
+                    e.target.value
+                  )
                 }
                 required
               >
@@ -261,14 +369,19 @@ function AttritionPrediction() {
             </div>
 
             {/* WORK LIFE BALANCE */}
+
             <div className="form-group">
 
-              <label>Work-Life Balance</label>
+              <label>
+                Work-Life Balance
+              </label>
 
               <select
                 value={workLifeBalance}
                 onChange={(e) =>
-                  setWorkLifeBalance(e.target.value)
+                  setWorkLifeBalance(
+                    e.target.value
+                  )
                 }
                 required
               >
@@ -298,15 +411,20 @@ function AttritionPrediction() {
             </div>
 
             {/* OVERTIME HOURS */}
+
             <div className="form-group">
 
-              <label>Overtime Hours</label>
+              <label>
+                Overtime Hours
+              </label>
 
               <input
                 type="number"
                 value={overtimeHours}
                 onChange={(e) =>
-                  setOvertimeHours(e.target.value)
+                  setOvertimeHours(
+                    e.target.value
+                  )
                 }
                 placeholder="Example: 10"
                 min="0"
@@ -316,15 +434,20 @@ function AttritionPrediction() {
             </div>
 
             {/* YEARS AT COMPANY */}
+
             <div className="form-group">
 
-              <label>Years at Company</label>
+              <label>
+                Years at Company
+              </label>
 
               <input
                 type="number"
                 value={yearsAtCompany}
                 onChange={(e) =>
-                  setYearsAtCompany(e.target.value)
+                  setYearsAtCompany(
+                    e.target.value
+                  )
                 }
                 placeholder="Example: 3"
                 min="0"
@@ -335,15 +458,20 @@ function AttritionPrediction() {
             </div>
 
             {/* PROMOTION YEARS AGO */}
+
             <div className="form-group">
 
-              <label>Promotion Years Ago</label>
+              <label>
+                Promotion Years Ago
+              </label>
 
               <input
                 type="number"
                 value={promotionYearsAgo}
                 onChange={(e) =>
-                  setPromotionYearsAgo(e.target.value)
+                  setPromotionYearsAgo(
+                    e.target.value
+                  )
                 }
                 placeholder="Example: 2"
                 min="0"
@@ -354,15 +482,20 @@ function AttritionPrediction() {
             </div>
 
             {/* LEAVE DAYS */}
+
             <div className="form-group">
 
-              <label>Leave Days</label>
+              <label>
+                Leave Days
+              </label>
 
               <input
                 type="number"
                 value={leaveDays}
                 onChange={(e) =>
-                  setLeaveDays(e.target.value)
+                  setLeaveDays(
+                    e.target.value
+                  )
                 }
                 placeholder="Example: 10"
                 min="0"
@@ -372,10 +505,13 @@ function AttritionPrediction() {
             </div>
 
             {/* ERROR */}
+
             {error && (
               <div className="attrition-error">
 
-                <span>!</span>
+                <span>
+                  !
+                </span>
 
                 <span>
                   {safeText(error)}
@@ -385,6 +521,7 @@ function AttritionPrediction() {
             )}
 
             {/* BUTTON */}
+
             <button
               type="submit"
               className="check-risk-btn"
@@ -409,6 +546,7 @@ function AttritionPrediction() {
         </div>
 
         {/* ================= RESULT CARD ================= */}
+
         <div className="attrition-card result-card">
 
           <div className="card-heading">
@@ -418,7 +556,9 @@ function AttritionPrediction() {
             </div>
 
             <div>
-              <h2>Attrition Risk Result</h2>
+              <h2>
+                Attrition Risk Result
+              </h2>
 
               <p>
                 AI-generated employee attrition analysis.
@@ -428,6 +568,7 @@ function AttritionPrediction() {
           </div>
 
           {/* EMPTY STATE */}
+
           {!result && !loading && (
             <div className="result-empty">
 
@@ -448,6 +589,7 @@ function AttritionPrediction() {
           )}
 
           {/* LOADING */}
+
           {loading && (
             <div className="result-loading">
 
@@ -466,10 +608,12 @@ function AttritionPrediction() {
           )}
 
           {/* RESULT */}
+
           {result && !loading && (
             <div className="attrition-result">
 
               {/* MAIN RISK */}
+
               <div className="risk-main">
 
                 <span>
@@ -488,9 +632,9 @@ function AttritionPrediction() {
               </div>
 
               {/* RESULT GRID */}
+
               <div className="result-grid">
 
-                {/* SCORE */}
                 <div className="result-item">
 
                   <span>
@@ -499,13 +643,14 @@ function AttritionPrediction() {
 
                   <strong>
                     {result.score != null
-                      ? safeText(result.score)
+                      ? safeText(
+                          result.score
+                        )
                       : "N/A"}
                   </strong>
 
                 </div>
 
-                {/* CONFIDENCE */}
                 <div className="result-item">
 
                   <span>
@@ -515,7 +660,9 @@ function AttritionPrediction() {
                   <strong>
                     {result.confidence != null
                       ? `${(
-                          Number(result.confidence) * 100
+                          Number(
+                            result.confidence
+                          ) * 100
                         ).toFixed(0)}%`
                       : "N/A"}
                   </strong>
@@ -525,6 +672,7 @@ function AttritionPrediction() {
               </div>
 
               {/* EMPLOYEE ID */}
+
               <div className="risk-status">
 
                 <div className="status-icon">
@@ -538,14 +686,17 @@ function AttritionPrediction() {
                   </strong>
 
                   <p>
-                    {safeText(result.employeeId)}
+                    {safeText(
+                      result.employeeId
+                    )}
                   </p>
 
                 </div>
 
               </div>
 
-              {/* RISK INFORMATION */}
+              {/* AI ANALYSIS */}
+
               <div className="recommendation-box">
 
                 <strong>

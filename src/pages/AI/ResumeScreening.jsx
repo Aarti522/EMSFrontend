@@ -102,46 +102,97 @@ function ResumeScreening() {
       formData.append("job_description", jobDescription);
       formData.append("role", jobRole);
 
-      // ================= API REQUEST =================
+    // ================= API REQUEST =================
 
-      const response = await axios.post(
-        "http://localhost:8080/ai/resume",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+const response = await api.post(
+  "/ai/resume",
+  formData
+);
 
-      console.log("Resume Screening Response:", response.data);
+console.log(
+  "Resume Screening Response:",
+  response.data
+);
 
-      setResult(response.data);
-    } catch (err) {
-      console.error("Resume screening error:", err);
+// Spring response may be:
+// { success: true, data: {...}, message: "..." }
+// or direct {...}
 
-      let errorMessage = "Resume screening failed.";
+const resumeResult =
+  response.data?.data ??
+  response.data;
 
-      if (err?.response?.status === 403) {
-        errorMessage =
-          "Access denied. You do not have permission to use Resume Screening.";
-      } else if (err?.response?.status === 401) {
-        errorMessage =
-          "Your session has expired. Please login again.";
-      } else if (err?.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      } else if (err?.response?.data?.error) {
-        errorMessage = err.response.data.error;
-      } else if (typeof err?.response?.data === "string") {
-        errorMessage = err.response.data;
-      }
+if (
+  resumeResult === null ||
+  resumeResult === undefined
+) {
+  setError(
+    "Resume screening returned an empty response."
+  );
+  return;
+}
 
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
+setResult(resumeResult);
+
+} catch (err) {
+  console.error(
+    "Resume screening error:",
+    err
+  );
+
+  console.error(
+    "Resume screening error response:",
+    err?.response?.data
+  );
+
+  let errorMessage =
+    "Resume screening failed.";
+
+  if (err?.response?.status === 401) {
+    errorMessage =
+      "Your session has expired. Please login again.";
+  }
+
+  else if (err?.response?.status === 403) {
+    errorMessage =
+      "Access denied. You do not have permission to use Resume Screening.";
+  }
+
+  else if (err?.response?.status === 404) {
+    errorMessage =
+      "Resume Screening endpoint not found.";
+  }
+
+  else if (err?.response?.status === 500) {
+    errorMessage =
+      err?.response?.data?.message ||
+      err?.response?.data?.error ||
+      "Resume Screening server error. Please check Spring Boot and Python AI service.";
+  }
+
+  else if (err?.response?.data?.message) {
+    errorMessage =
+      err.response.data.message;
+  }
+
+  else if (err?.response?.data?.error) {
+    errorMessage =
+      err.response.data.error;
+  }
+
+  else if (
+    typeof err?.response?.data === "string"
+  ) {
+    errorMessage =
+      err.response.data;
+  }
+
+  setError(errorMessage);
+
+} finally {
+  setLoading(false);
+}
+};
 
   // =========================================================
   // FILE CHANGE

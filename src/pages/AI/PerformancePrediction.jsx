@@ -234,109 +234,148 @@ function PerformancePrediction() {
       return;
     }
 
-    // =======================================================
-    // API REQUEST
-    // =======================================================
+          // =======================================================
+      // API REQUEST
+      // =======================================================
 
-    try {
-      setLoading(true);
+      try {
+        setLoading(true);
+        setError("");
+        setResult(null);
 
-      const token =
-        localStorage.getItem("token");
+        const requestBody = {
+          employeeId: Number(finalEmployeeId),
 
-      const requestBody = {
-        employeeId: Number(finalEmployeeId),
+          // Important for backend role-based authorization
+          role: userRole,
 
-        // Important for backend role-based authorization
-        role: userRole,
+          attendancePercentage:
+            Number(attendancePercentage),
 
-        attendancePercentage:
-          Number(attendancePercentage),
+          experienceYears:
+            Number(experienceYears),
 
-        experienceYears:
-          Number(experienceYears),
+          projectsCompleted:
+            Number(projectsCompleted),
 
-        projectsCompleted:
-          Number(projectsCompleted),
+          tasksCompleted:
+            Number(tasksCompleted),
 
-        tasksCompleted:
-          Number(tasksCompleted),
+          previousRating:
+            Number(previousRating),
 
-        previousRating:
-          Number(previousRating),
+          trainingCompleted:
+            Number(trainingCompleted),
 
-        trainingCompleted:
-          Number(trainingCompleted),
+          overtimeHours:
+            Number(overtimeHours),
 
-        overtimeHours:
-          Number(overtimeHours),
+          leaveDays:
+            Number(leaveDays),
+        };
 
-        leaveDays:
-          Number(leaveDays),
-      };
+        console.log(
+          "Performance AI Request:",
+          requestBody
+        );
 
-      console.log(
-        "Performance AI Request:",
-        requestBody
-      );
+        // Uses VITE_API_URL automatically through api.js
+        // JWT token is also added automatically by api.js
+        const response = await api.post(
+          "/ai/performance",
+          requestBody
+        );
 
-      const response = await axios.post(
-        "http://localhost:8080/ai/performance",
-        requestBody,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+        console.log(
+          "Performance AI Response:",
+          response.data
+        );
+
+        // Supports both wrapped and direct backend responses
+        const performanceResult =
+          response.data?.data ??
+          response.data;
+
+        if (
+          performanceResult === null ||
+          performanceResult === undefined
+        ) {
+          setError(
+            "Performance AI returned an empty response."
+          );
+          return;
         }
-      );
 
-      console.log(
-        "Performance AI Response:",
-        response.data
-      );
+        setResult(performanceResult);
 
-      setResult(response.data);
-
-    } catch (err) {
-      console.error(
-        "Performance prediction error:",
-        err
-      );
-
-      let errorMessage =
-        "Unable to generate performance prediction.";
-
-      if (err?.response?.status === 403) {
-        errorMessage =
-          userRole === "MANAGER"
-            ? "You can predict performance only for employees in your team."
-            : "You are not authorized to access this performance prediction.";
-      } else if (err?.response?.data?.message) {
-        errorMessage = safeText(
-          err.response.data.message
+      } catch (err) {
+        console.error(
+          "Performance prediction error:",
+          err
         );
-      } else if (err?.response?.data?.detail) {
-        errorMessage = safeText(
-          err.response.data.detail
+
+        console.error(
+          "Performance error response:",
+          err?.response?.data
         );
-      } else if (err?.response?.data?.error) {
-        errorMessage = safeText(
-          err.response.data.error
-        );
-      } else if (err?.response?.data) {
-        errorMessage = safeText(
-          err.response.data
-        );
+
+        let errorMessage =
+          "Unable to generate performance prediction.";
+
+        if (err?.response?.status === 401) {
+          errorMessage =
+            "Session expired. Please login again.";
+        }
+
+        else if (err?.response?.status === 403) {
+          errorMessage =
+            userRole === "MANAGER"
+              ? "You can predict performance only for employees in your team."
+              : "You are not authorized to access this performance prediction.";
+        }
+
+        else if (err?.response?.status === 404) {
+          errorMessage =
+            "Performance AI endpoint not found.";
+        }
+
+        else if (err?.response?.status === 500) {
+          errorMessage =
+            err?.response?.data?.message ||
+            err?.response?.data?.error ||
+            "Performance AI server error. Please check Spring Boot and Python AI service.";
+        }
+
+        else if (err?.response?.data?.message) {
+          errorMessage = safeText(
+            err.response.data.message
+          );
+        }
+
+        else if (err?.response?.data?.detail) {
+          errorMessage = safeText(
+            err.response.data.detail
+          );
+        }
+
+        else if (err?.response?.data?.error) {
+          errorMessage = safeText(
+            err.response.data.error
+          );
+        }
+
+        else if (err?.response?.data) {
+          errorMessage = safeText(
+            err.response.data
+          );
+        }
+
+        setError(errorMessage);
+
+      } finally {
+        setLoading(false);
       }
-
-      setError(errorMessage);
-
-    } finally {
-      setLoading(false);
-    }
-  };
-
+      };
   // =========================================================
   // RESET
   // =========================================================

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../services/api";
 import "../../styles/ai-attendance.css";
@@ -587,39 +586,23 @@ function AttendanceInsights() {
     );
 
     // =======================================================
-    // API REQUEST
-    // =======================================================
+// API REQUEST
+// =======================================================
 
-    try {
-      setLoading(true);
-      setError("");
-      setResult(null);
+try {
+  setLoading(true);
+  setError("");
+  setResult(null);
 
-      const token =
-        localStorage.getItem("token");
+  const response = await api.post(
+    "/ai/ai-attendance",
+    requestBody
+  );
 
-      if (!token) {
-        setError(
-          "Authentication token not found. Please login again."
-        );
-        return;
-      }
-
-      const response = await axios.post(
-        "http://localhost:8080/ai/ai-attendance",
-        requestBody,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
-        }
-      );
-
-      console.log(
-        "Attendance AI Response:",
-        response.data
-      );
+  console.log(
+    "Attendance AI Response:",
+    response.data
+  );
 
       // =====================================================
       // HANDLE SPRING / FASTAPI RESPONSE
